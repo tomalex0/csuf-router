@@ -14,11 +14,15 @@ var app = express();
 // we need this because "cookie" is true in csrfProtection
 app.use(cookieParser())
 
+var apiRouter =  require('./api')();
+//console.log(apiRouter(),'apiRouter');
+
 // create api router
 var api = createApiRouter()
+console.log(api, 'api')
 
 // mount api before csrf is appended to the app stack
-app.use('/api', api)
+app.use('/api', apiRouter)
 
 // now add csrf, after the "/api" was mounted
 app.use(csrfProtection)
@@ -46,4 +50,6 @@ function createApiRouter() {
   return router
 }
 
-app.listen(80);
+app.listen(80, function startServer(){
+    console.log('Server listening on https://localhost:%d', this.address().port);
+});
